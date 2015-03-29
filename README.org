@@ -40,13 +40,14 @@ As the name of this package implies, the target computers are brought through th
 
 From the human's point of view, the details of the process go like this:
 
-1) A target's MAC address is collected by whatever means and an entry for it is made in the Ansible hosts file in the =toinstall= group
+1) A target's MAC address is collected by whatever means and an entry for it is made in the Ansible hosts file in the =[toinstall]= group
 2) The [[./scripts/update-server.sh]] script is run to update the installation server.
 3) The target is netbooted and the installation OS is selected via the menu.
-4) The install is monitored for any manual questions until completion.
-5) The target's entry in the Ansible hosts file is moved to the =toconfigure= group
-6) The [[./update-targets.sh]] script is run to enact any remaining configuration.
-7) The target's entry in the Ansible hosts file is moved to whatever applicable group for ongoing configuration management.
+4) Observe that the install OS has booted and the installation has began.  It should be hands-off.
+5) Move the target entry in the Ansible host file from the =[toinstall]= section to the =[toconfigure]= group.
+6) The [[./scripts/update-server.sh]] script is re-run in order to remove the now installed targets.  This can be done while the installation is still in progress.
+7) Once installation has finished, run the [[./scripts/update-targets.sh]] script to enact any remaining configuration.
+8) The target's entry in the Ansible hosts file is moved to a final group as applicable for its long term use.
 
 
 

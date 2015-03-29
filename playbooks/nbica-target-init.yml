@@ -1,0 +1,24 @@
+---
+- hosts: toconfigure
+  remote_user: rootless
+  ansible_sudo_pass: rootless
+  tasks:
+    - name: Install rootless SSH key access
+      authorized_key: >
+        key="{{ lookup('file', 'keys/ssh-key.pub') }}"
+        user=rootless
+
+    - name: Install root SSH key access
+      authorized_key: >
+        key="{{ lookup('file', 'keys/ssh-key.pub') }}"
+        user=root
+      sudo=yes
+
+- hosts: toconfigure
+  remote_user: root
+  tasks:
+    - name: Disable rootless password
+      shell: passwd -d rootless
+      
+
+  
