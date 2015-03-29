@@ -49,7 +49,7 @@ d-i     user-setup/encrypt-home boolean false
 d-i     passwd/user-default-groups      string adm cdrom dialout lpadmin plugdev sambashare
 
 d-i     apt-setup/services-select       multiselect security
-d-i     apt-setup/security_host string {{ item}}:9999
+d-i     apt-setup/security_host string {{ hostvars[item]['aptmirror'] }}
 d-i     apt-setup/security_path string /ubuntu-security
 d-i     debian-installer/allow_unauthenticated  string false
 d-i     pkgsel/upgrade  select safe-upgrade
@@ -69,7 +69,7 @@ d-i     pkgsel/include string openssh-server
 
 
 d-i mirror/country string manual
-d-i mirror/http/hostname string {{ item }}:9999
+d-i mirror/http/hostname string {{ hostvars[item]['aptmirror'] }}
 d-i mirror/http/directory string /ubuntu
 d-i mirror/http/proxy string
 

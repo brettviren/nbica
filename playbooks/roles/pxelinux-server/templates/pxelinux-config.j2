@@ -1,8 +1,11 @@
-path syslinux
 default syslinux/vesamenu.c32
 prompt 0
 timeout 150
 ontimeout boothd
+
+# fixme: put host-specific message in title.
+
+menu title Boot and Install options for host {{ item }}
 
 label boothd
         menu label ^Boot Local HDD
@@ -12,6 +15,6 @@ label boothd
 {% for server in groups['nbica-servers'] %}
 label {{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}
         menu label ^Install {{ hostvars[item]['distro'] }} {{ hostvars[item]['flavor'] }}
-        kernel {{ hostvars[item]['flavor'] }}/{{ hostvars[item]['distro'] }}-installer/amd64/linux
-        append initrd={{ hostvars[item]['flavor'] }}/{{ hostvars[item]['distro'] }}-installer/amd64/initrd.gz auto url=tftp://{{ server }}/preseed/{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}.preseed locale=en_US.UTF-8 debian-installer/keymap=us vga=0x317 console-setup/ask_detect=false -- quiet 
+        kernel netboot/{{ hostvars[item]['flavor'] }}/{{ hostvars[item]['distro'] }}-installer/amd64/linux
+        append initrd=netboot/{{ hostvars[item]['flavor'] }}/{{ hostvars[item]['distro'] }}-installer/amd64/initrd.gz hostname={{ item }} auto url=tftp://{{ server }}/preseed/{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}.preseed locale=en_US.UTF-8 debian-installer/keymap=us vga=0x317 console-setup/ask_detect=false -- quiet 
 {% endfor %}
