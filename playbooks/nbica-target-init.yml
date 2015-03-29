@@ -4,20 +4,17 @@
   tasks:
     - name: Install rootless SSH key access
       authorized_key: >
-        key="{{ lookup('file', 'keys/ssh-key.pub') }}"
+        key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         user=rootless
 
     - name: Install root SSH key access
       authorized_key: >
-        key="{{ lookup('file', 'keys/ssh-key.pub') }}"
+        key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         user=root
-      sudo=yes
+      sudo: yes
 
-- hosts: toconfigure
-  remote_user: root
-  tasks:
     - name: Disable rootless password
       shell: passwd -d rootless
-      
+      sudo: yes
 
   

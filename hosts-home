@@ -1,15 +1,24 @@
 [nbica-servers]
+# the installation server
 haiku.home dnsmasq_dhcp_range=192.168.1.0 
 
 
-[toinstall]
-donordell mac=00:22:19:dc:2e:bb distro=ubuntu flavor=vivid
-
 [toinstall:vars]
+# set the package mirror host[:port]
 aptmirror = haiku:9999
+
+[toinstall]
+# put targets here which need installation
 
 
 [toconfigure]
+# put targets here after they are installed so they get post-installation configuration
+
+[mate-desktops]
+donordell mac=00:22:19:dc:2e:bb distro=ubuntu flavor=vivid
+
+
+[bogus]
 # fixme: no preseed files for these yet
 fake1 mac=00:22:19:dc:2e:bc distro=ubuntu flavor=utopic
 fake2 mac=00:22:19:dc:2e:bd distro=debian flavor=wheezy
