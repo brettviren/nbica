@@ -1,0 +1,28 @@
+---
+- name: Test templates
+  template: src=test.j2 dest=/tmp/test.txt
+
+- name: Install dnsmasq
+  apt: name=dnsmasq state=latest
+
+- name: Known dnsmasq hosts
+  template: src=dnsmasq-known-hosts.j2 dest=/etc/dnsmasq.d/known-hosts.conf
+  notify:
+    - restart dnsmasq
+
+- name: ProxyDHCP dnsmasq config
+  template: src=dnsmasq-proxydhcp.j2 dest=/etc/dnsmasq.d/proxydhcp.conf
+  notify:
+    - restart dnsmasq
+
+- name: Assure dnsmasq config chunks get picked up
+  lineinfile: >
+    dest=/etc/dnsmasq.conf 
+    regexp='conf-dir=/etc/dnsmasq.d' 
+    state=present 
+    line='conf-dir=/etc/dnsmasq.d'
+  notify:
+    - restart dnsmasq
+
+- name: restart dnsmasq
+  service: name=dnsmasq state=restarted

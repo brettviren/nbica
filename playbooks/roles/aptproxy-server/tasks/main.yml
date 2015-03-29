@@ -1,0 +1,12 @@
+---
+- name: Install packages for pxelinux support
+  apt: name="{{ item }}" state=present
+  with_items:
+    approx
+
+- name: Approx config
+  template: >
+    src=approx-conf.j2
+    dest=/etc/approx/approx.conf
+    
+    

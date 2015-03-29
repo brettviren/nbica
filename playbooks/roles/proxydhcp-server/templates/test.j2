@@ -1,0 +1,11 @@
+Hosts to install:
+{% for host in groups['toinstall'] %}
+    {{ host }} with MAC: {{ hostvars[host]['mac']}} install: {{ hostvars[host]['distro'] }}-{{ hostvars[host]['flavor'] }}
+{% endfor %}
+
+
+Hosts to configure:
+{% for host in groups['toconfigure'] %}
+    {{ host }} with MAC: {{ hostvars[host]['mac']}}
+{% endfor %}
+

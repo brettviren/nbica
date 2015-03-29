@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+'''
+Return Ansible Dynamic Inventory Data 
+'''
+
+import os
+import sys
+import json
+
+srcdir=os.path.dirname(os.path.realpath(__file__))
+topdir=os.path.dirname(srcdir)
+datdir=os.path.join(topdir, 'data')
+
+def iter_file(filename, delim=' ', dirname=datdir):
+    filename = os.path.join(dirname,filename)
+    if not os.path.exists(filename):
+        return
+    with open(filename) as fp:
+        for line in fp.readlines():
+            line = line.strip()
+            if not line:
+                continue
+            yield line.split(delim)
+        
+    
+
+def toinstall_hosts():
+    ret = list()
+    for mac, host in iter_file('toinstall.macs'):
+        ret.append(host)
+    return ret
+
+def toinstall_vars(want):
+    for mac, host in iter_file('toinstall.macs'):
+        if host == want:
+            return dict(mac = mac)
+    return dict()
+
+def main():
+    arg = sys.argv[1]
+    if arg == '--list':
+        dat = dict(toinstall = toinstall_hosts())
+        print (json.dumps(dat))
+        return
+
+    if arg == '--host':
+        host = sys.argv[2]
+        dat = toinstall_vars(host)
+        print (json.dumps(dat))
+        return
+
+    print json.dumps(dict())
+
+if '__main__' == __name__:
+    main()
+
+
+    
+

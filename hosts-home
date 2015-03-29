@@ -1,0 +1,12 @@
+[nbica-servers]
+haiku.home dnsmasq_dhcp_range=192.168.1.0 
+
+[toinstall]
+donordell mac=00:22:19:dc:2e:bb distro=ubuntu flavor=vivid
+
+
+[toconfigure]
+# fixme: no preseed files for these yet
+fake1 mac=00:22:19:dc:2e:bc distro=ubuntu flavor=utopic
+fake2 mac=00:22:19:dc:2e:bd distro=debian flavor=wheezy
+fake3 mac=00:22:19:dc:2e:be distro=debian flavor=jessie

@@ -1,0 +1,14 @@
+# log traffic info
+log-dhcp
+# Turn on the included TFTP server
+enable-tftp
+# Root directory for TFTP files
+tftp-root=/var/lib/tftpboot
+# PXE boot loader
+dhcp-boot=pxelinux.0
+# Act as proxyDHCP on given network
+dhcp-range={{ dnsmasq_dhcp_range }},proxy
+# Ignore anybody we don't know
+dhcp-ignore=tag:!known
+# last arg is pxe file bootloader sans ".0"
+pxe-service=x86PC, "Boot PXELinux", syslinux/pxelinux

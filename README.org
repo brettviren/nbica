@@ -1,0 +1,52 @@
+#+TITLE: Network Boot, Installation and Configuration via Ansible
+
+* Overview
+
+This package provides a method to set up an environment for network booting, installation and configuration via Ansible ("nbica") with the goal to provision some number of computers with Debian/Ubuntu operating systems.  
+
+Note, the method is general and maybe useful as an example to others but many things about my targeted environment are baked in.  
+
+** Terms
+
+Here,
+
+ - machine :: a physical box
+ - system :: running OS
+ - install server :: (or just "server") refers to the host for all the services described below
+ - install target :: (or just "target") refers to a machine to boot, install and configure
+ - target OS :: the OS to install to the target
+ - installation OS :: ephemeral OS which is booted in order to install the target OS
+
+** Environment
+
+The environment is centered around an installation /server/ which is configured by the Ansible playbooks from this package to provide these services:
+
+ - proxyDHCP for serving PXE boot information (co-existing with some external "real" DHCP daemon providing IP-configuration)
+ - TFTP daemon providing access to:
+   - =pxelinux= boot loader and its configuration files
+   - Debian/Ubuntu netboot distributions (kernel+initrd)
+   - =debian-installer= preseed files
+ - Approx Debian/Ubuntu package proxy/mirror
+
+** Process
+
+As the name of this package implies, the target computers are brought through these stages:
+
+- boot :: the computer is booted via PXE over the network.  This requires either BIOS settings or getting into the "boot menu" while the machine is in POST.  The machine will then rely on the "real" DHCP server to supply its IP configuration information and maybe host/domain names.  Which OS the machine boots is determined by its MAC address and dictated by the proxyDHCP server.  Newly introduced machines will boot an installation OS
+
+- install :: OS installations occur when a machine netboots pxelinux which then loads a Debian/Ubuntu "netboot" image which is configured with a "preseed" file providing the answers to installation questions.  To the extent it can, this allows hands-off installation once the boot begins.  
+
+- configure :: Post-installation configuration is done in the "usual ansible way".  The only tie-in with the rest of the system is that the Ansible roles of the machine change to avoid accidental re-installation.
+
+From the human's point of view, the details of the process go like this:
+
+1) A target's MAC address is collected by whatever means and an entry for it is made in the Ansible hosts file in the =toinstall= group
+2) The [[./scripts/update-server.sh]] script is run to update the installation server.
+3) The target is netbooted and the installation OS is selected via the menu.
+4) The install is monitored for any manual questions until completion.
+5) The target's entry in the Ansible hosts file is moved to the =toconfigure= group
+6) The [[./update-targets.sh]] script is run to enact any remaining configuration.
+7) The target's entry in the Ansible hosts file is moved to whatever applicable group for ongoing configuration management.
+
+
+

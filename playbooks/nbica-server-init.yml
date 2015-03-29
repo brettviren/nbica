@@ -1,0 +1,9 @@
+---
+- hosts: nbica-servers
+  remote_user: root
+    
+  roles: 
+    - { role: aptproxy-server }
+    - { role: proxydhcp-server }
+    - { role: pxelinux-server }
+

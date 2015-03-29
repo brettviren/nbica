@@ -1,0 +1,60 @@
+---
+- name: Install packages for pxelinux support
+  apt: name="{{ item }}" state=present
+  with_items:
+    syslinux-common
+
+- file: state=directory path="/var/lib/tftpboot/pxelinux.cfg"
+
+- name: Link in syslinux to ftfpboot
+  file: state=link force=yes src="/usr/lib/syslinux" path="/var/lib/tftpboot/syslinux"
+  
+- name: Make pxelinux configuration for the to-be-installed machines
+  template: >
+    src=pxelinux-config.j2 
+    dest="/var/lib/tftpboot/pxelinux.cfg/{{ hostvars[item]['mac']|replace(':','-') }}"
+  with_items: groups['toinstall']
+
+- name: Remove any in post-install config state
+  file: >
+    state=absent 
+    dest="/var/lib/tftpboot/pxelinux.cfg/{{ hostvars[item]['mac']|replace(':','-') }}"
+  with_items: groups['toconfigure']
+
+
+- name: Download Debian netboots
+  get_url: >
+    url="http://ftp.us.debian.org/debian/dists/{{ hostvars[item]['flavor'] }}/main/installer-amd64/current/images/netboot/netboot.tar.gz"
+    dest="/var/lib/tftpboot/{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}-netboot.tar.gz"
+  with_items: groups['toinstall']
+  when: hostvars[item]['distro'] == "debian"
+
+- name: Download Ubuntu netboots
+  get_url: >
+    url="http://archive.ubuntu.com/ubuntu/dists/{{ hostvars[item]['flavor'] }}/main/installer-amd64/current/images/netboot/netboot.tar.gz"
+    dest="/var/lib/tftpboot/{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}-netboot.tar.gz"
+  with_items: groups['toinstall']
+  when: hostvars[item]['distro'] == "ubuntu"
+
+
+- name: Assure netboot dir
+  file: state=directory path="/var/lib/tftpboot/{{ hostvars[item]['flavor'] }}"
+  with_items: groups['toinstall']
+
+- name: Unpack netboots
+  unarchive: >
+    copy=no
+    src="/var/lib/tftpboot/{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}-netboot.tar.gz"
+    dest="/var/lib/tftpboot/{{ hostvars[item]['flavor'] }}"
+    creates="/var/lib/tftpboot/{{ hostvars[item]['flavor'] }}/version.info"
+  with_items: groups['toinstall']
+
+- name: Assure directories
+  file: state=directory path="/var/lib/tftpboot/preseed"
+
+- name: Place preseed file
+  template: >
+    src="{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}-preseed.j2"
+    dest="/var/lib/tftpboot/preseed/{{ hostvars[item]['distro'] }}-{{ hostvars[item]['flavor'] }}.preseed"
+  with_items: groups['toinstall']
+

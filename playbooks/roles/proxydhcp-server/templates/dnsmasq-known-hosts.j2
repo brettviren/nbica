@@ -1,0 +1,3 @@
+{% for host in groups['toinstall'] %}
+dhcp-host={{hostvars[host]['mac']}},{{ host }}
+{% endfor %}
