@@ -1,7 +1,6 @@
 ---
 - hosts: toconfigure
   remote_user: rootless
-  ansible_sudo_pass: rootless
   tasks:
     - name: Install rootless SSH key access
       authorized_key: >

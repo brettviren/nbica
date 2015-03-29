@@ -19,5 +19,6 @@ ping () {
 
 
 play () {
-    ansible-playbook -i "$hostfile" "$playdir/${1}.yml" || exit 1
+    pb="$1"; shift
+    ansible-playbook $* -i "$hostfile" "$playdir/${pb}.yml" || exit 1
 }
