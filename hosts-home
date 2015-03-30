@@ -9,13 +9,23 @@ aptmirror = haiku:9999
 
 [toinstall]
 # put targets here which need installation
+sadsony mac=00:13:CE:B3:39:18 distro=debian flavor=jessie
 
 
 [toconfigure]
 # put targets here after they are installed so they get post-installation configuration
 
 [mate-desktops]
-donordell mac=00:22:19:dc:2e:bb distro=ubuntu flavor=vivid
+donordell
+
+[tracked-inventory:vars]
+fusionserverurl = https://hype/glpi/plugins/fusioninventory/
+
+[tracked-inventory]
+donordell
+
+[student-workstations]
+donordell
 
 
 [bogus]

@@ -1,0 +1,14 @@
+---
+- name: Install fusion inventory agent
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - fusioninventory-agent
+
+- name: Configure fusion inventory
+  lineinfile: >
+    dest=/etc/fusioninventory/agent.cfg
+    regexp='^server ='
+    state=present
+    line="server = {{ hostvars[ansible_hostname]['fusionserverurl'] }}"
+  notify:
+    - restart fusioninventory-agent

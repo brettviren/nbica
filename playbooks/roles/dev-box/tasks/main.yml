@@ -1,0 +1,11 @@
+---
+- name: Install dev packages
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - build-essential
+    - emacs24
+    - cmake
+    - git
+    - subversion
+    - git-svn
+

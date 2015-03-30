@@ -1,0 +1,19 @@
+---
+- shell: tasksel install ubuntu-mate-live
+  args: 
+    creates: /usr/share/doc/ubuntu-mate-live-settings/copyright
+
+- shell: tasksel install ubuntu-mate-desktop
+  args:
+    creates: /usr/share/doc/ubuntu-mate-desktop/copyright
+
+- shell: tasksel install ubuntu-mate-core
+  args:
+    creates: /usr/share/doc/ubuntu-mate-core/copyright
+
+- shell: tasksel install ubuntu-desktop
+  args:
+    creates: /usr/share/doc/ubuntu-desktop/copyright
+
+
+

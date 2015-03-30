@@ -1,0 +1,7 @@
+---
+- hosts: physics-workstations
+  remote_user: root
+    
+  roles: 
+    - { role: dev-box }
+

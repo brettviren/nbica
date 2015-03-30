@@ -1,0 +1,8 @@
+---
+- name: Install Physics packages
+  apt: name="{{ item }}" state=latest
+  with_items:
+    - root-system
+    - ipython
+    - libroot-bindings-python5.34
+

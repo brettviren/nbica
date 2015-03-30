@@ -7,3 +7,5 @@
     - { role: proxydhcp-server }
     - { role: pxelinux-server }
 
+  handlers:
+    - include: roles/proxydhcp-server/handlers/handlers.yml

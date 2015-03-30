@@ -1,0 +1,9 @@
+---
+- hosts: tracked-inventory
+  remote_user: root
+    
+  roles: 
+    - { role: tracked-inventory }
+
+  handlers:
+    - include: roles/tracked-inventory/handlers/handlers.yml

@@ -1,0 +1,9 @@
+---
+- hosts: student-workstations
+  remote_user: root
+    
+  roles: 
+    - { role: tracked-inventory }
+    - { role: dev-box }
+    - { role: mate-desktop }
+    - { role: physics-workstation }
